@@ -13,18 +13,18 @@ public class EngineTest {
     }
 
     static void callsAreCountedForOneInstance() throws Exception {
-        resetCallCount();
         Engine engine = new Engine();
 
         engine.doSomething();
         engine.doSomething();
         engine.doSomething();
 
-        assertEquals(3, callCount(engine));
+        var callCount = //calls to doSomething
+
+        assertEquals(3, callCount);
     }
 
     static void callsAreCountedAcrossInstances() throws Exception {
-        resetCallCount();
         Engine first = new Engine();
         Engine second = new Engine();
 
@@ -32,12 +32,12 @@ public class EngineTest {
         first.doSomething();
         second.doSomething();
 
-        assertEquals(3, callCount(first));
-        assertEquals(3, callCount(second));
+        var callCount = //calls to doSomething
+
+        assertEquals(3, callCount);
     }
 
     static void callsAreCountedAcrossThreadsAndInstances() throws Exception {
-        resetCallCount();
         int threadCount = 8;
         int callsPerThread = 100;
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
@@ -69,33 +69,8 @@ public class EngineTest {
             throw new AssertionError("Timed out waiting for worker threads");
         }
 
-        assertEquals(threadCount * callsPerThread, callCount(engines[0]));
-    }
+        var callCount = //calls to doSomething
 
-    private static int callCount(Engine engine) throws Exception {
-        return invokeIntMethod(engine, "getCallCount");
-    }
-
-    private static void resetCallCount() throws Exception {
-        Method reset = Engine.class.getMethod("resetCallCount");
-        try {
-            reset.invoke(null);
-        } catch (InvocationTargetException exception) {
-            throw new AssertionError(exception.getCause());
-        }
-    }
-
-    private static int invokeIntMethod(Engine engine, String methodName) throws Exception {
-        try {
-            return (Integer) Engine.class.getMethod(methodName).invoke(engine);
-        } catch (InvocationTargetException exception) {
-            throw new AssertionError(exception.getCause());
-        }
-    }
-
-    private static void assertEquals(int expected, int actual) {
-        if (expected != actual) {
-            throw new AssertionError("Expected " + expected + " but was " + actual);
-        }
+        assertEquals(threadCount * callsPerThread, callCount);
     }
 }
